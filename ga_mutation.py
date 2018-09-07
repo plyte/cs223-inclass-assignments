@@ -6,7 +6,19 @@ bases = ['A','G','T','C']
 #a and c require different nucleotides
 def Mutate(DNASeq,Mut,n=None):
     #choose which mutation
-
+    if(Mut == 'M'):
+        return Missense(DNASeq)
+    elif(Mut == 'N'):
+        return Nonesense(DNASeq)
+    elif(Mut == 'I'):
+        return Insertion(DNASeq)
+    elif(Mut == 'D'):
+        return Deletion(DNASeq)
+    elif(Mut == 'U'):
+        return Duplication(DNASeq)
+    elif(Mut == 'R'):
+        return Repeat(DNASeq)
+        
 def Missense(DNASeq):
     mutSpace = randint(0,len(DNASeq)-1)
 
@@ -59,3 +71,17 @@ def Duplication(DNASeq,n):
 
 def Repeat(DNASeq,n):
     mutSpace = randint(0,len(DNASeq)-1)
+
+    newString = ''
+    if(n+1 > len(DNASeq)+1):
+        newString = DNASeq[mutSpace:]
+    else:
+        newString = DNASeq[mutSpace:mutSpace+n+1]
+
+    NewSeq = ''
+    NewSeq = DNASeq[:mutSpace+n+1]
+
+    for i in range(0,n):
+        NewSeq = NewSeq + newString
+    
+    return NewSeq + DNASeq[mutSpace+n+1:]
