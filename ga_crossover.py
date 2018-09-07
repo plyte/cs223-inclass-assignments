@@ -39,16 +39,8 @@ def crossover(dna):
     dna_sequence_list[crossover_start:len_of_crossover] = inv_dna_crossover
     inv_dna_list[crossover_start:len_of_crossover] = dna_crossover
     
-    print(type(dna_sequence_list))
-    print(type(inv_dna_list))
-    
-    print(dna_sequence_list)
-    print(inv_dna_list)
     dna_string = ''.join(dna_sequence_list)
-    inv_dna_string = ''.join(inv_dna_list)
-    print(dna_string)
-    print(inv_dna_string)
-    
+    inv_dna_string = ''.join(inv_dna_list)    
     
     return (dna_string, inv_dna_string)
 
@@ -64,11 +56,14 @@ if __name__ == "__main__":
         content = f.readline()
         print(content)
         crossover_result = crossover(str(content).rstrip())
-        to_write_to.write(crossover_result)
+        formatted_string = '({},{})'.format(crossover_result[0], crossover_result[1])
+        to_write_to.write(formatted_string)
+        
         while content:
             content = f.readline()
-            crossover_result = crossover(content)
-            to_write_to.write(crossover_result)
+            crossover_result = crossover(content.rstrip())
+            formatted_string = '({},{})'.format(crossover_result[0], crossover_result[1])
+            to_write_to.write(formatted_string)
             
         f.close()
         
