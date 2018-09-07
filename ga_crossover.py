@@ -218,6 +218,3 @@ def main():
 def crossover_test():
     test_val = "GCGGCCCAGGCCCGGAACCTTCCCTGGTCGTGCGCCATATGTAAGGCCAGCCGCGGCAGGACCAAGGCGG"
     result_val = crossover(test_val)
-
-if __name__ == "__main__":
-    main()
