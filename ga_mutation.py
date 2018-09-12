@@ -3,28 +3,47 @@ from random import randint
 import re
 
 bases = ['A','G','T','C']
+mutations = ['M','N','I','D','U','R']
+
+def main():
+    fname = "dna_sequences.dat"
+    to_write_to = open('mutation_results.dat', 'w+')
+    f = open(fname, 'r')
+
+    for line in f:
+        mutation = mutations[randint(0,5)]
+        result = None
+        if(mutation == 'U' or mutation == 'R'):
+            n = randint(1,10)
+            result = Mutate(line,mutation,n)
+        else:
+            result = Mutate(line,mutation)
+
+        output = mutation + '\n' + result
+        to_write_to.write(output)
+
 #a and c require different nucleotides
 def Mutate(DNASeq,Mut,n=None):
     #choose which mutation
     if(Mut == 'M'):
         return Missense(DNASeq)
     elif(Mut == 'N'):
-        return Nonesense(DNASeq)
+        return NonSense(DNASeq)
     elif(Mut == 'I'):
         return Insertion(DNASeq)
     elif(Mut == 'D'):
         return Deletion(DNASeq)
     elif(Mut == 'U'):
-        return Duplication(DNASeq)
+        return Duplication(DNASeq,n)
     elif(Mut == 'R'):
-        return Repeat(DNASeq)
+        return Repeat(DNASeq,n)
         
 def Missense(DNASeq):
     mutSpace = randint(0,len(DNASeq)-1)
 
     newSeq = ''
     space = 0
-    for each nuc in DNASeq:
+    for nuc in DNASeq:
         if(space != mutSpace):
             newSeq = newSeq + nuc
         else:
@@ -32,6 +51,7 @@ def Missense(DNASeq):
             while(newNuc == DNASeq[mutSpace]):
                 newNuc = bases[randint(0,3)]
             newSeq = newSeq + newNuc
+        space = space + 1
 
     return newSeq
 
@@ -39,7 +59,7 @@ def NonSense(DNASeq):
     locations = []
     regex = re.compile('AG')
     
-    for m in rege.finditer(DNASeq):
+    for m in regex.finditer(DNASeq):
         locations.append(m.start())
 
     if(len(locations) == 0):
@@ -56,32 +76,35 @@ def Insertion(DNASeq):
 
 def Deletion(DNASeq):
     mutSpace = randint(0,len(DNASeq)-1)
-    return DNASeq[:space] + DNASeq[space+1:]
+    return DNASeq[:mutSpace] + DNASeq[mutSpace+1:]
 
 def Duplication(DNASeq,n):
     mutSpace = randint(0,len(DNASeq)-1)
 
     newString = ''
     if(n+1 > len(DNASeq)+1):
-        newString = DNASeq[mutSpace:]
+        newString = DNASeq[mutSpace-1:]
     else:
-        newString = DNASeq[mutSpace:mutSpace+n+1]
-
-    return DNASeq[:mutSpace+n+1] + newString + DNASeq[mutSpace+n+1:]
+        newString = DNASeq[mutSpace:mutSpace+n]
+    #print(mutSpace)
+    #print(newString)
+    return DNASeq[:mutSpace+n].rstrip() + newString.rstrip() + DNASeq[mutSpace+n:].rstrip() + '\n'
 
 def Repeat(DNASeq,n):
     mutSpace = randint(0,len(DNASeq)-1)
 
     newString = ''
     if(n+1 > len(DNASeq)+1):
-        newString = DNASeq[mutSpace:]
+        newString = DNASeq[mutSpace-1:]
     else:
-        newString = DNASeq[mutSpace:mutSpace+n+1]
+        newString = DNASeq[mutSpace:mutSpace+n]
 
     NewSeq = ''
-    NewSeq = DNASeq[:mutSpace+n+1]
+    NewSeq = DNASeq[:mutSpace+n].rstrip()
 
     for i in range(0,n):
-        NewSeq = NewSeq + newString
+        NewSeq = NewSeq.rstrip() + newString.rstrip()
     
-    return NewSeq + DNASeq[mutSpace+n+1:]
+    #print(mutSpace)
+    #print(newString)
+    return NewSeq.rstrip() + DNASeq[mutSpace+n:].rstrip() + '\n'
